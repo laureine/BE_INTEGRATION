@@ -1,0 +1,50 @@
+
+
+
+ARM Macro Assembler    Page 1 
+
+
+    1 00000000                 thumb
+    2 00000000         ;  
+    3 00000000                 area             moncode, code, readonly
+    4 00000000         
+    5 00000000                 export           carreM2
+    6 00000000         
+    7 00000000         
+    8 00000000         carreM2 proc
+    9 00000000         
+   10 00000000 FB80 2300       smull            r2, r3, r0, r0 ; R3 = Re²
+   11 00000004 FB81 C201       smull            r12, r2, r1, r1 ; R5 = Im²
+   12 00000008         ; on additionne R4 et R5 pour obtenir le carre:
+   13 00000008 EB03 0002       add              r0, r3, r2
+   14 0000000C 4770            bx               lr
+   15 0000000E                 endp                         ;
+                       
+Command Line: --debug --xref --cpu=Cortex-M3 --apcs=interwork --depend=carreM2.
+d -ocarreM2.o -IC:\Keil\ARM\RV31\INC -IC:\Keil\ARM\CMSIS\Include -IC:\Keil\ARM\
+Inc\ST\STM32F10x --predefine="__EVAL SETA 1" --predefine="__MICROLIB SETA 1" --
+list=.\carreM2.lst Sources\carreM2.asm
+
+
+
+ARM Macro Assembler    Page 1 Alphabetic symbol ordering
+Relocatable symbols
+
+carreM2 00000000
+
+Symbol: carreM2
+   Definitions
+      At line 8 in file Sources\carreM2.asm
+   Uses
+      At line 5 in file Sources\carreM2.asm
+Comment: carreM2 used once
+moncode 00000000
+
+Symbol: moncode
+   Definitions
+      At line 3 in file Sources\carreM2.asm
+   Uses
+      None
+Comment: moncode unused
+2 symbols
+334 symbols in table

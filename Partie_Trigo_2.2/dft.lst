@@ -1,0 +1,118 @@
+
+
+
+ARM Macro Assembler    Page 1 
+
+
+    1 00000000                 thumb
+    2 00000000         ;  
+    3 00000000                 area             moncode, code, readonly
+    4 00000000         
+    5 00000000                 import           LeSignal
+    6 00000000                 export           DFTre
+    7 00000000         
+    8 00000000 00000004 
+                       Nbre_pt equ              4
+    9 00000000 00000003 
+                       mask    equ              3
+   10 00000000         
+   11 00000000         DFTre   proc
+   12 00000000 F84D AD04       push             {r10}
+   13 00000004 4A0C            ldr              r2, =LeSignal
+   14 00000006 F04F 3CFF       mov              r12, #-1    ;i <0-63>
+   15 0000000A F04F 0A00       mov              r10, #0     ;somme 
+   16 0000000E         _dft
+   17 0000000E F10C 0C01       add              r12, #1
+   18 00000012 FB00 F30C       mul              r3, r0, r12 ;i*k
+   19 00000016 F003 0303       and              r3, #mask   ;modulo 63
+   20 0000001A F932 1010       ldrsh            r1, [r2, r0, lsl #1] ;loader le
+                                                             signal avec indice
+                                                             k
+   21 0000001E F931 2013       ldrsh            r2, [r1, r3, lsl #1] ;loader le
+                                                             cos avec indice ik
+                                                            
+   22 00000022 FB01 F102       mul              r1, r1, r2  ;signal*cos
+   23 00000026 448A            add              r10, r1     ;addition le produi
+                                                            t
+   24 00000028 F1BC 0F04       cmp              r12, #Nbre_pt ;test
+   25 0000002C D1EF            bne              _dft
+   26 0000002E 4650            mov              r0, r10
+   27 00000030 F85D AB04       pop{r10}
+   28 00000034 4770            bx               lr
+   29 00000036                 endp
+   30 00000036                 end
+              00 00 00000000 
+Command Line: --debug --xref --cpu=Cortex-M3 --apcs=interwork --depend=dft.d -o
+dft.o -IC:\Keil\ARM\RV31\INC -IC:\Keil\ARM\CMSIS\Include -IC:\Keil\ARM\Inc\ST\S
+TM32F10x --predefine="__EVAL SETA 1" --predefine="__MICROLIB SETA 1" --list=.\d
+ft.lst Sources\dft.asm
+
+
+
+ARM Macro Assembler    Page 1 Alphabetic symbol ordering
+Relocatable symbols
+
+DFTre 00000000
+
+Symbol: DFTre
+   Definitions
+      At line 11 in file Sources\dft.asm
+   Uses
+      At line 6 in file Sources\dft.asm
+Comment: DFTre used once
+_dft 0000000E
+
+Symbol: _dft
+   Definitions
+      At line 16 in file Sources\dft.asm
+   Uses
+      At line 25 in file Sources\dft.asm
+Comment: _dft used once
+moncode 00000000
+
+Symbol: moncode
+   Definitions
+      At line 3 in file Sources\dft.asm
+   Uses
+      None
+Comment: moncode unused
+3 symbols
+
+
+
+ARM Macro Assembler    Page 1 Alphabetic symbol ordering
+Absolute symbols
+
+Nbre_pt 00000004
+
+Symbol: Nbre_pt
+   Definitions
+      At line 8 in file Sources\dft.asm
+   Uses
+      At line 24 in file Sources\dft.asm
+Comment: Nbre_pt used once
+mask 00000003
+
+Symbol: mask
+   Definitions
+      At line 9 in file Sources\dft.asm
+   Uses
+      At line 19 in file Sources\dft.asm
+Comment: mask used once
+2 symbols
+
+
+
+ARM Macro Assembler    Page 1 Alphabetic symbol ordering
+External symbols
+
+LeSignal 00000000
+
+Symbol: LeSignal
+   Definitions
+      At line 5 in file Sources\dft.asm
+   Uses
+      At line 13 in file Sources\dft.asm
+Comment: LeSignal used once
+1 symbol
+340 symbols in table

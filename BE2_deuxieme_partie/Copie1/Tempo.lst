@@ -1,0 +1,153 @@
+
+
+
+ARM Macro Assembler    Page 1 
+
+
+    1 00000000         ; ce programme est pour l'assembleur RealView (Keil)
+    2 00000000                 thumb
+    3 00000000         
+    4 00000000                 area             mesdata, data, readwrite
+    5 00000000 01 00   Flag    DCW              1
+    6 00000002         
+    7 00000002                 area             moncode, code, readonly
+    8 00000000         
+    9 00000000                 export           Tempo
+   10 00000000         ;
+   11 00000000         
+   12 00000000         Tempo   proc
+   13 00000000         
+   14 00000000 40010C10 
+                       GPIOB_BSRR
+                               equ              0x40010C10  ; Bit Set/Reset reg
+                                                            ister
+   15 00000000         
+   16 00000000 4A0A            ldr              r2, =Flag
+   17 00000002 6814            ldr              r4, [r2]
+   18 00000004 2C00            cmp              r4, #0
+   19 00000006 D107            bne              SET_ZERO
+   20 00000008         
+   21 00000008         
+   22 00000008         
+   23 00000008         SET_UN
+   24 00000008         ; mise a 1 de PB1
+   25 00000008 4B09            ldr              r3, =GPIOB_BSRR
+   26 0000000A 2102            movs             r1, #0x00000002
+   27 0000000C 6019            str              r1, [r3]
+   28 0000000E F04F 0401       mov              r4, #1
+   29 00000012 4A06            ldr              r2, =Flag
+   30 00000014 6014            str              r4, [r2]
+   31 00000016 E007            b                FIN
+   32 00000018         
+   33 00000018         
+   34 00000018         SET_ZERO
+   35 00000018         ; mise a zero de PB1
+   36 00000018 4B05            ldr              r3, =GPIOB_BSRR
+   37 0000001A F45F 3100       movs             r1, #0x00020000
+   38 0000001E 6019            str              r1, [r3]
+   39 00000020 F04F 0400       mov              r4, #0
+   40 00000024 4A01            ldr              r2, =Flag
+   41 00000026 6014            str              r4, [r2]
+   42 00000028         
+   43 00000028         FIN
+   44 00000028 4770            bx               lr          ; dernière instruct
+                                                            ion de la fonction
+   45 0000002A                 endp
+   46 0000002A         
+   47 0000002A         ; Retour au principal
+   48 0000002A                 end
+              00 00 00000000 
+              40010C10 
+Command Line: --debug --xref --cpu=Cortex-M3 --apcs=interwork --depend=Tempo.d 
+-oTempo.o -IC:\Keil\ARM\RV31\INC -IC:\Keil\ARM\CMSIS\Include -IC:\Keil\ARM\Inc\
+ST\STM32F10x --predefine="__EVAL SETA 1" --predefine="__MICROLIB SETA 1" --list
+=.\Tempo.lst Sources\Tempo.s
+
+
+
+ARM Macro Assembler    Page 1 Alphabetic symbol ordering
+Relocatable symbols
+
+Flag 00000000
+
+Symbol: Flag
+   Definitions
+      At line 5 in file Sources\Tempo.s
+   Uses
+      At line 16 in file Sources\Tempo.s
+      At line 29 in file Sources\Tempo.s
+      At line 40 in file Sources\Tempo.s
+
+mesdata 00000000
+
+Symbol: mesdata
+   Definitions
+      At line 4 in file Sources\Tempo.s
+   Uses
+      None
+Comment: mesdata unused
+2 symbols
+
+
+
+ARM Macro Assembler    Page 1 Alphabetic symbol ordering
+Relocatable symbols
+
+FIN 00000028
+
+Symbol: FIN
+   Definitions
+      At line 43 in file Sources\Tempo.s
+   Uses
+      At line 31 in file Sources\Tempo.s
+Comment: FIN used once
+SET_UN 00000008
+
+Symbol: SET_UN
+   Definitions
+      At line 23 in file Sources\Tempo.s
+   Uses
+      None
+Comment: SET_UN unused
+SET_ZERO 00000018
+
+Symbol: SET_ZERO
+   Definitions
+      At line 34 in file Sources\Tempo.s
+   Uses
+      At line 19 in file Sources\Tempo.s
+Comment: SET_ZERO used once
+Tempo 00000000
+
+Symbol: Tempo
+   Definitions
+      At line 12 in file Sources\Tempo.s
+   Uses
+      At line 9 in file Sources\Tempo.s
+Comment: Tempo used once
+moncode 00000000
+
+Symbol: moncode
+   Definitions
+      At line 7 in file Sources\Tempo.s
+   Uses
+      None
+Comment: moncode unused
+5 symbols
+
+
+
+ARM Macro Assembler    Page 1 Alphabetic symbol ordering
+Absolute symbols
+
+GPIOB_BSRR 40010C10
+
+Symbol: GPIOB_BSRR
+   Definitions
+      At line 14 in file Sources\Tempo.s
+   Uses
+      At line 25 in file Sources\Tempo.s
+      At line 36 in file Sources\Tempo.s
+
+1 symbol
+342 symbols in table

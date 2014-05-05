@@ -1,0 +1,208 @@
+
+
+
+ARM Macro Assembler    Page 1 
+
+
+    1 00000000         ; ce programme est pour l'assembleur RealView (Keil)
+    2 00000000                 thumb
+    3 00000000         ;  
+    4 00000000                 area             moncode, code, readonly
+    5 00000000                 export           Timer_callback
+    6 00000000                 include          etat.inc
+    1 00000000 00000000 
+                       E_POS   equ              0
+    2 00000000 00000004 
+                       E_TAI   equ              4
+    3 00000000 00000008 
+                       E_SON   equ              8
+    4 00000000 0000000C 
+                       E_RES   equ              12
+    5 00000000 00000010 
+                       E_PER   equ              16
+    6 00000000                 end
+    7 00000000                 import           etat
+    8 00000000         
+    9 00000000         Timer_callback
+                               proc
+   10 00000000 4000043C 
+                       TIM3_CCR3
+                               equ              0x4000043C  ; adresse registre 
+                                                            PWM ==> faire fonct
+                                                            ionner PWM
+   11 00000000         ;ro @ de la structure de etat
+   12 00000000         ;r1 tmp (&son, resol, tim3)
+   13 00000000         ;r2 position
+   14 00000000         ;r3 son lu puis transforme
+   15 00000000         
+   16 00000000         
+   17 00000000 B500            push             {lr}
+   18 00000002 480E            ldr              r0, =etat
+   19 00000004 6802            ldr              r2, [r0, #E_POS] 
+                                                            ;; Valeur de pos
+   20 00000006 6841            ldr              r1, [r0, #E_TAI] 
+                                                            ;; Valeur de taille
+                                                            
+   21 00000008 4291            cmp              r1,r2
+   22 0000000A D90A            bls              out
+   23 0000000C 6881            ldr              r1, [r0, #E_SON] 
+                                                            ;;Valeur de son
+   24 0000000E F931 3012       ldrsh            r3, [r1, r2, lsl #1] ;extension
+                                                             de signe a 32bits
+   25 00000012         
+   26 00000012         ; add r3, #32768
+   27 00000012 68C1            ldr              r1, [r0, #E_RES]
+   28 00000014 FB03 F301       mul              r3,r1       ;;produit en croix 
+                                                            : on multiplie par 
+                                                            resolution
+   29 00000018 EA4F 4313       lsr              r3, #16     ;; et on divise par
+                                                             2^16 (valeur_max)
+   30 0000001C 4908            ldr              r1, =TIM3_CCR3
+   31 0000001E 600B            str              r3, [r1]    ;;envoi du son
+   32 00000020 E007            b                fin
+   33 00000022         
+   34 00000022 4907    out     ldr              r1, =TIM3_CCR3
+   35 00000024 68C3            ldr              r3, [r0, #E_RES]
+
+
+
+ARM Macro Assembler    Page 2 
+
+
+   36 00000026         ;lsr r3, #1  ; Decalage a droite
+   37 00000026 F1A3 0301       sub              r3, #1      ; Decalage a droite
+                                                            
+   38 0000002A 600B            str              r3, [r1]    ; stocke resolution
+                                                             dans PWM
+   39 0000002C         ;===MISE A ZERO=====
+   40 0000002C F101 0100       add              r1, #0
+   41 00000030 6001            str              r1, [r0, #E_POS]
+   42 00000032         
+   43 00000032 F102 0201 
+                       fin     add              r2, #1      ;;incrementation de
+                                                             la position 
+   44 00000036 6002            str              r2, [r0, #E_POS]
+   45 00000038         
+   46 00000038 BD00            pop{pc}
+   47 0000003A                 endp
+   48 0000003A                 end
+              00 00 00000000 
+              4000043C 
+Command Line: --debug --xref --cpu=Cortex-M3 --apcs=interwork --depend=timer_ca
+llback.d -otimer_callback.o -IC:\Keil\ARM\RV31\INC -IC:\Keil\ARM\CMSIS\Include 
+-IC:\Keil\ARM\Inc\ST\STM32F10x --predefine="__EVAL SETA 1" --predefine="__MICRO
+LIB SETA 1" --list=.\timer_callback.lst Sources\timer_callback.s
+
+
+
+ARM Macro Assembler    Page 1 Alphabetic symbol ordering
+Relocatable symbols
+
+Timer_callback 00000000
+
+Symbol: Timer_callback
+   Definitions
+      At line 9 in file Sources\timer_callback.s
+   Uses
+      At line 5 in file Sources\timer_callback.s
+Comment: Timer_callback used once
+fin 00000032
+
+Symbol: fin
+   Definitions
+      At line 43 in file Sources\timer_callback.s
+   Uses
+      At line 32 in file Sources\timer_callback.s
+Comment: fin used once
+moncode 00000000
+
+Symbol: moncode
+   Definitions
+      At line 4 in file Sources\timer_callback.s
+   Uses
+      None
+Comment: moncode unused
+out 00000022
+
+Symbol: out
+   Definitions
+      At line 34 in file Sources\timer_callback.s
+   Uses
+      At line 22 in file Sources\timer_callback.s
+Comment: out used once
+4 symbols
+
+
+
+ARM Macro Assembler    Page 1 Alphabetic symbol ordering
+Absolute symbols
+
+E_PER 00000010
+
+Symbol: E_PER
+   Definitions
+      At line 5 in file Sources\etat.inc
+   Uses
+      None
+Comment: E_PER unused
+E_POS 00000000
+
+Symbol: E_POS
+   Definitions
+      At line 1 in file Sources\etat.inc
+   Uses
+      At line 19 in file Sources\timer_callback.s
+      At line 41 in file Sources\timer_callback.s
+      At line 44 in file Sources\timer_callback.s
+
+E_RES 0000000C
+
+Symbol: E_RES
+   Definitions
+      At line 4 in file Sources\etat.inc
+   Uses
+      At line 27 in file Sources\timer_callback.s
+      At line 35 in file Sources\timer_callback.s
+
+E_SON 00000008
+
+Symbol: E_SON
+   Definitions
+      At line 3 in file Sources\etat.inc
+   Uses
+      At line 23 in file Sources\timer_callback.s
+Comment: E_SON used once
+E_TAI 00000004
+
+Symbol: E_TAI
+   Definitions
+      At line 2 in file Sources\etat.inc
+   Uses
+      At line 20 in file Sources\timer_callback.s
+Comment: E_TAI used once
+TIM3_CCR3 4000043C
+
+Symbol: TIM3_CCR3
+   Definitions
+      At line 10 in file Sources\timer_callback.s
+   Uses
+      At line 30 in file Sources\timer_callback.s
+      At line 34 in file Sources\timer_callback.s
+
+6 symbols
+
+
+
+ARM Macro Assembler    Page 1 Alphabetic symbol ordering
+External symbols
+
+etat 00000000
+
+Symbol: etat
+   Definitions
+      At line 7 in file Sources\timer_callback.s
+   Uses
+      At line 18 in file Sources\timer_callback.s
+Comment: etat used once
+1 symbol
+345 symbols in table
